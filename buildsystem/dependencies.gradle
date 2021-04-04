@@ -89,7 +89,8 @@ ext {
             junit           : "androidx.test.ext:junit:$androidx_junit",
             coroutines_test : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android",
             mockito_kotlin  : "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin",
-            core_testing    : "androidx.arch.core:core-testing:$arch_core"
+            core_testing    : "androidx.arch.core:core-testing:$arch_core",
+            mockk           : "io.mockk:mockk:$mockk"
     ]
 
     androidTestLibraries = [

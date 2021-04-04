@@ -7,6 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// DO inject an external scope instead of using GlobalScope.
+// GlobalScope can be used indirectly. Here as a default parameter makes sense.
+// DO NOT use GlobalScope directly
 class ArticlesRepository(
     private val articlesDataSource: ArticlesDataSource,
     private val externalScope: CoroutineScope, // should be created and managed by a class that lives

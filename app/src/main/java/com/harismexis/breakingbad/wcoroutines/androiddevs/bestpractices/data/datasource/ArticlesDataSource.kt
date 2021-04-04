@@ -8,4 +8,8 @@ class ArticlesDataSource {
 
     }
 
+    fun isBookmarked(article: Article): Boolean {
+        return true
+    }
+
 }
