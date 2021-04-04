@@ -1,0 +1,169 @@
+
+---------------------------------
+
+Sean McQuillan - Coroutines - Part I, II, III
+
+---------------------------------
+
+- Part I: Using coroutines (Dispatchers etc):
+https://medium.com/androiddevelopers/coroutines-on-android-part-i-getting-the-background-3e0e54d20bb
+
+- A coroutine is a concurrency design pattern that you can use on Android to simplify code
+that executes asynchronously
+
+Coroutines build upon regular functions by adding two new operations.
+In addition to invoke (or call) and return, coroutines add suspend and resume.
+=> suspend — pause the execution of the current coroutine, saving all local variables
+=> resume — continue a suspended coroutine from the place it was paused
+
+- Whenever a coroutine is suspended, the current stack frame
+(the place that Kotlin uses to keep track of which function is running and its variables)
+is copied and saved for later. When it resumes, the stack frame is copied back from where it
+was saved and starts running again. When all of the coroutines on the main thread are suspended,
+the main thread is free to do other work.
+
+- Coroutines will run on the main thread, and suspend does not mean background.
+
+- Coroutines can suspend themselves, and the dispatcher is the thing that knows how to resume them.
+
+- Room will provide main-safety automatically if you use suspend functions, RxJava, or LiveData.
+
+- Networking libraries such as Retrofit and Volley manage their own threads and do not require explicit
+main-safety in your code when used with Kotlin coroutines.
+
+- Well written suspend functions are always safe to call from the main thread (or main-safe).
+
+- It’s a really good idea to make every suspend function main-safe. If it does anything that touches the disk,
+network, or even just uses too much CPU, use withContext to make it safe to call from the main thread
+
+- If a function will make 10 calls to a database, you can tell Kotlin to switch once in an outer
+withContext around all 10 calls. Then, even though the database library will call withContext repeatedly,
+it will stay on the same dispatcher and follow a fast-path
+
+-----------------------------------------------------------------------------------------
+
+- Part II: Structured Concurrency:
+https://medium.com/androiddevelopers/coroutines-on-android-part-ii-getting-started-3bff117176dd
+
+- A work leak is like a memory leak, but worse. It’s a coroutine that’s been lost.
+In addition to using memory, a work leak can resume itself to use CPU, disk, or even launch a network request.
+
+- Structured concurrency is a combination of language features and best practices that, when followed,
+help you keep track of all work running in coroutines.
+
+- On Android, we can use structured concurrency to do three things:
+=> Cancel work when it is no longer needed.
+=> Keep track of work while it’s running.
+=> Signal errors when a coroutine fails.
+
+- In Kotlin, coroutines must run in something called a CoroutineScope. A CoroutineScope keeps track of
+your coroutines, even coroutines that are suspended. Unlike the Dispatchers, it doesn’t execute
+your coroutines — it just makes sure you don’t lose track of them.
+
+- You can think of a CoroutineScope as sort of like lightweight version of an ExecutorService with superpowers
+
+- A CoroutineScope keeps track of all your coroutines, and it can cancel all of the coroutines started in it.
+
+There are two ways to start coroutines, and they have different uses:
+=> launch builder will start a new coroutine that is “fire and forget” — that means it won’t return the result
+to the caller.
+=> async builder will start a new coroutine, and it allows you to return a result with a suspend function called
+
+- Launch is a bridge from regular functions into coroutines
+
+- Warning: A big difference between launch and async is how they handle exceptions. async expects
+that you will eventually call await to get a result (or exception) so it won’t throw exceptions by default.
+That means if you use async to start a new coroutine it will silently drop exceptions.
+
+- On Android, it often makes sense to associate a CoroutineScope with a user screen
+
+- Structured concurrency guarantees when a scope cancels, all of its coroutines cancel
+
+- CoroutineScope will propagate itself. So, if a coroutine you start goes on to start another coroutine,
+they’ll both end up in the same scope. That means even when libraries that you depend on start a
+coroutine from your viewModelScope, you’ll have a way to cancel them
+
+- Since viewModelScope will automatically cancel coroutines for you, it’s totally fine to write an infinite
+loop here without creating leaks
+
+- To make more coroutines, any suspend functions can start more coroutines by using another builder called
+coroutineScope or its cousin supervisorScope.
+
+- Structured concurrency guarantees that when a suspend function returns, all of its work is done
+
+- coroutineScope and supervisorScope let you safely launch coroutines from suspend functions
+
+- The coroutineScope builder will suspend itself until all coroutines started inside of it are complete
+
+- coroutineScope and supervisorScope will wait for child coroutines to complete
+
+- SupervisorScope VS CoroutineScope: The main difference is that a coroutineScope will cancel whenever any
+of its children fail. So, if one network request fails, all of the other requests are cancelled immediately.
+If instead you want to continue the other requests even when one fails, you can use a supervisorScope.
+A supervisorScope won’t cancel other children when one of them fails.
+
+- Introducing unrelated coroutine scopes (eg. MainScope in the given example) in suspend functions is not
+following the programming practices of structured concurrency
+
+- Structured concurrency guarantees that when a coroutine errors, its caller or scope is notified.
+
+- You can create unstructured concurrency by introducing a new unrelated CoroutineScope (note the capital C),
+or by using a global scope called GlobalScope, but you should only consider unstructured concurrency in rare
+cases when you need the coroutine to live longer than the calling scope
+
+- Here are the guarantees of structured concurrency.
+=> When a scope cancels, all of its coroutines cancel.
+=> When a suspend fun returns, all of its work is done.
+=> When a coroutine errors, its caller or scope is notified.
+
+-
+
+-----------------------------------------------------------------------------------------
+
+- Part III: Real work
+https://medium.com/androiddevelopers/coroutines-on-android-part-iii-real-work-2ba8a2ec2f45
+
+- Coroutines are a great solution for:
+=> One shot requests are requests that are run each time they are called — they always complete after the
+result is ready.
+=> Streaming requests are requests that continue to observe changes and report them to caller — they don’t
+complete when the first result is ready.
+
+- A one shot request is performed each time it’s called. It stops executing as soon as a result is ready
+
+- As a general pattern, start coroutines in the ViewModel.
+
+- A repository should prefer to expose regular suspend functions that are main-safe
+
+- Suspend functions in Room are main-safe and run on a custom dispatcher
+
+- The one shot request pattern:
+=> ViewModel launches a coroutine on the main thread — it completes when it has a result.
+=> Repository exposes regular suspend functions and ensures they are main-safe.
+=> The database and network expose regular suspend functions and ensures they are main-safe.
+
+PROBLEM - BUG : the user presses the sort button too fast so they see an unsorted list:
+
+- When starting a new coroutine in response to a UI event, consider what happens if the user starts
+another before this one completes
+
+- The best solution (SIMPLE): Disable the button using liveData i.e. _sortButtonsEnabled
+
+- Advanced Solutions:
+- There are three basic patterns that you can use for a one shot request to ensure that exactly one
+request runs at a time.
+
+- Solution 1 => Cancel previous work before starting more.
+Consider building abstractions to avoid mixing ad-hoc concurrency patterns with application code.
+
+- Solution 2 => Queue the next work and wait for the previous requests to complete before starting another one.
+A Mutex lets you ensure only one coroutine runs at a time — and they will finish in the order they started.
+
+- Solution 3 => Join previous work if there’s already a request running just return that one instead of starting
+another request
+Join previous work is a great solution to avoiding repeated network requests
+
+
+
+
+----------------------------------------------------------------------------------------

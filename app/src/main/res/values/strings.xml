@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Breaking Bad</string>
+    <string name="screen_home_label">Cast</string>
+    <string name="screen_actor_detail_label">Actor</string>
+    <string name="screen_quotes_label">Quotes</string>
+    <string name="screen_deaths_label">Deaths</string>
+    <string name="screen_episodes_label">Episodes</string>
+    <string name="screen_player_label">Player</string>
+
+    <!-- -->
+    <string name="quotes">Quotes</string>
+    <string name="deaths">Deaths</string>
+    <string name="episodes">Episodes</string>
+    <string name="player">Player</string>
+
+    <!-- vh actor -->
+    <string name="content_description_character_image">Actor Image</string>
+
+    <!-- actor detail -->
+    <string name="label_name">Name</string>
+    <string name="label_nickname">Nickname</string>
+    <string name="label_birthday">Birthday</string>
+    <string name="label_status">Status</string>
+    <string name="label_portrayed">Portrayed</string>
+    <string name="label_category">Category</string>
+    <string name="missing_value">[missing value]</string>
+    <string name="missing_img_url">[missing image url]</string>
+    <string name="character_image">Image</string>
+    <string name="cd_item_detail_image">Selected character</string>
+
+</resources>
