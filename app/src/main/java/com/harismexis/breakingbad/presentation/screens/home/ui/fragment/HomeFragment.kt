@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -18,6 +20,8 @@ import com.harismexis.breakingbad.presentation.result.ActorsResult
 import com.harismexis.breakingbad.presentation.screens.home.ui.adapter.ActorAdapter
 import com.harismexis.breakingbad.presentation.screens.home.ui.viewholder.ActorViewHolder
 import com.harismexis.breakingbad.presentation.screens.home.viewmodel.HomeViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment(), ActorViewHolder.ActorClickListener,
     android.widget.SearchView.OnQueryTextListener {
@@ -137,6 +141,15 @@ class HomeFragment : BaseFragment(), ActorViewHolder.ActorClickListener,
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()
+    }
+
+    // ------------- EXPERIMENTS ---------------------------
+
+    private fun fetch1(name: String?) {
+        // Avoid these scopes
+        lifecycleScope.launch { }
+        GlobalScope.launch { }
+        ProcessLifecycleOwner.get().lifecycleScope.launch { }
     }
 
 }

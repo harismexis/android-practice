@@ -5,12 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.harismexis.breakingbad.presentation.result.ActorsResult
-import com.harismexis.breakingbad.presentation.screens.home.interactors.HomeInteractors
 import com.harismexis.breakingbad.framework.extensions.getErrorMessage
 import com.harismexis.breakingbad.framework.util.functional.Action1
 import com.harismexis.breakingbad.framework.util.network.ConnectivityMonitorSimple
+import com.harismexis.breakingbad.presentation.result.ActorsResult
+import com.harismexis.breakingbad.presentation.screens.home.interactors.HomeInteractors
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -68,5 +71,27 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    // ------------- EXPERIMENTS ---------------------------
+
+    private fun fetch1(name: String?) {
+        viewModelScope.launch {  }
+
+    }
+
+    private suspend fun fetch(name: String?) {
+        viewModelScope.launch {  }
+        coroutineScope {
+            launch {  }
+            val deferred = async {  }
+            val result = deferred.await()
+        }
+        supervisorScope {
+            val deferred = async {  }
+            val result = deferred.await()
+        }
+    }
+
+
 
 }
