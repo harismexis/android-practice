@@ -1,3 +1,3 @@
-### Overview:
+### Description
 
-The project is for Android practice
+A project with purpose to practice with Android Service, JobIntentService, Receivers etc

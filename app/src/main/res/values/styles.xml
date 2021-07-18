@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- base -->
+    <style name="MainActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="drawerArrowStyle">@style/DrawerIcon</item>
+    </style>
 
     <style name="BaseTxtv">
         <item name="android:layout_width">wrap_content</item>
@@ -11,10 +13,8 @@
         <item name="android:fontFamily">@font/ubuntu_regular</item>
     </style>
 
-    <!-- toolbar -->
-
     <style name="ToolbarText" parent="BaseTxtv">
-        <item name="android:textSize">@dimen/toolbar_text_size</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppToolbar">
@@ -23,71 +23,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!-- search view -->
-
-    <style name="SearchViewIconStyle">
-        <item name="android:searchIcon">@drawable/ic_search_white_18dp</item>
-        <item name="android:closeIcon">@drawable/ic_close_white_18dp</item>
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/white</item>
     </style>
-
-    <style name="SearchViewTextStyle" parent="Widget.AppCompat.SearchView">
-        <item name="android:editTextColor">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/grey_nine</item>
-        <item name="android:fontFamily">@font/ubuntu_regular</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:queryBackground">@null</item>
-        <item name="android:searchHintIcon">@null</item>
-    </style>
-
-    <!-- vh item -->
-
-    <style name="VhItemTxtv" parent="BaseTxtv">
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:layout_marginStart">@dimen/vh_item_txt_margin_horizontal</item>
-        <item name="android:layout_marginEnd">@dimen/vh_item_txt_margin_horizontal</item>
-    </style>
-
-    <style name="VhItemTitle" parent="VhItemTxtv">
-        <item name="android:textSize">@dimen/vh_item_title_text_size</item>
-        <item name="android:fontFamily">@font/ubuntu_bold</item>
-    </style>
-
-    <style name="VhItemMeta" parent="VhItemTxtv">
-        <item name="android:textSize">@dimen/vh_item_meta_text_size</item>
-    </style>
-
-    <!-- item detail -->
-
-    <style name="DetailTxtv" parent="BaseTxtv">
-        <item name="android:layout_marginStart">@dimen/actor_detail_txtv_margin_horizontal</item>
-        <item name="android:layout_marginEnd">@dimen/actor_detail_txtv_margin_horizontal</item>
-    </style>
-
-    <style name="ItemDetailTitle" parent="DetailTxtv">
-        <item name="android:textSize">@dimen/actor_detail_title_text_size</item>
-        <item name="android:fontFamily">@font/ubuntu_bold</item>
-    </style>
-
-    <style name="ItemDetailLabel" parent="DetailTxtv">
-        <item name="android:textSize">@dimen/actor_detail_label_text_size</item>
-        <item name="android:textColor">@color/green_six</item>
-    </style>
-
-    <style name="ItemDetailMeta" parent="DetailTxtv">
-        <item name="android:textSize">@dimen/actor_detail_meta_text_size</item>
-    </style>
-
-    <!-- quote item -->
-    <style name="VhQuoteItemTitle" parent="VhItemTitle">
-        <item name="android:maxLines">10</item>
-    </style>
-
-    <!-- episode item -->
-    <style name="VhEpisodeItemMeta" parent="VhItemMeta">
-        <item name="android:maxLines">10</item>
-    </style>
-
 
 </resources>
